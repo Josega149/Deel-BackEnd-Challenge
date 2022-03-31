@@ -10,11 +10,11 @@ const routes = express.Router();
 
 
 routes.get('/contracts', getProfile, asyncHandler(contractController.getContractById));
-routes.get('/contracts/:id', asyncHandler(contractController.getContractById));
+routes.get('/contracts/:id', getProfile, asyncHandler(contractController.getContractById));
 routes.get('/jobs/unpaid', asyncHandler(contractController.getContractById));
 
 routes.post('/jobs/:job_id/pay', asyncHandler(jobsController.payJobByJobId));
-routes.post('/balances/deposit/:userId', getProfile, asyncHandler(contractController.getContractById));
+routes.post('/balances/deposit/:userId', asyncHandler(contractController.getContractById));
 
 routes.get('/admin/best-profession?start=<date>&end=<date>', asyncHandler(contractController.getContractById));
 routes.get('/admin/best-clients?start=<date>&end=<date>&limit=<integer>', asyncHandler(contractController.getContractById));
