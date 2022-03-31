@@ -14,6 +14,15 @@ async function getContractById(req, res) {
     return res.status(200).json(contract);
 }
 
+async function getContracts(req, res) {
+    const { profile } = req;
+
+    const contracts = await contractService.getContractsByProfile(profile);
+
+    return res.status(200).json(contracts);
+}
+
 module.exports = {
-    getContractById
+    getContractById,
+    getContracts
 };

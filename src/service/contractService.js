@@ -17,6 +17,15 @@ async function getContractById(contractId, profile) {
     return contract;
 }
 
+async function getContractsByProfile(profile) {
+    const { id } = profile;
+
+    const contracts = await contractRepository.getContractsByProfileId(id);
+
+    return contracts;
+}
+
 module.exports = {
-    getContractById
+    getContractById,
+    getContractsByProfile
 };
