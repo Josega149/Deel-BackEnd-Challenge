@@ -2,7 +2,7 @@ const { Op } = require('@sequelize/core');
 const { Job } = require('../model');
 const { Contract } = require('../model');
 
-async function getUnpaidJobsByProfileId(profileId) {
+async function getUnpaidJobsByProfileId(profileId, transaction) {
     const jobs = await Job.findAll({ 
         where: { 
              [Op.and]: [
@@ -21,7 +21,8 @@ async function getUnpaidJobsByProfileId(profileId) {
         }, include:[{ 
             model: Contract,
             required: true,
-        }]
+        }],
+        transaction
     });
 
     return jobs;

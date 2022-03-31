@@ -25,7 +25,7 @@ async function payJobByJobId(jobId) {
         const { ContractId, price, paid } = job.dataValues;
 
         if (paid) {
-            throw new Error(`Job with id: ${jobId} was already paid.`);
+            throw new Error(`Job with id: ${jobId} is already paid.`);
         }
 
         const contract = await contractRepository.getContractById(ContractId, transaction);

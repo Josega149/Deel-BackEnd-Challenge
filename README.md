@@ -143,4 +143,8 @@ SQLite uses Serializable.
 jobService.payJobByJobId(job_id);
 jobService.payJobByJobId(job_id);
 
+TODO: Validate inputs
+
+TODO: Profile middleware should call profileRepository
+
 
