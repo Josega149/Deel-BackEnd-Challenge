@@ -1,5 +1,4 @@
 const { Contract } = require('../model');
-const { Profile } = require('../model');
 const { Op } = require('@sequelize/core');
 
 async function getContractById(contractId, transaction) {
@@ -9,7 +8,7 @@ async function getContractById(contractId, transaction) {
 }
 
 async function getContractsByProfileId(profileId) {
-    const contract = await Contract.findAll({ 
+    const contracts = await Contract.findAll({ 
         where: { 
             [Op.and]: [
                 {
@@ -27,7 +26,7 @@ async function getContractsByProfileId(profileId) {
         }
     });
 
-    return contract;
+    return contracts;
 }
 
 module.exports = {

@@ -11,7 +11,7 @@ const routes = express.Router();
 
 routes.get('/contracts', getProfile, asyncHandler(contractController.getContracts));
 routes.get('/contracts/:id', getProfile, asyncHandler(contractController.getContractById));
-routes.get('/jobs/unpaid', asyncHandler(contractController.getContractById));
+routes.get('/jobs/unpaid', getProfile, asyncHandler(jobsController.getUnpaidJobs));
 
 routes.post('/jobs/:job_id/pay', asyncHandler(jobsController.payJobByJobId));
 routes.post('/balances/deposit/:userId', asyncHandler(contractController.getContractById));

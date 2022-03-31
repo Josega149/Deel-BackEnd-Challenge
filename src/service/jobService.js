@@ -4,6 +4,15 @@ const jobRepository = require('../repository/jobRepository');
 const profileRepository = require('../repository/profileRepository');
 const contractRepository = require('../repository/contractRepository');
 
+
+async function getUnpaidJobsByProfile(profile) {
+    const { id } = profile;
+
+    const unpaidJobs = await jobRepository.getUnpaidJobsByProfileId(id);
+
+    return unpaidJobs;
+}
+
 /*
     Pay for a job.
     A client can only pay if his balance >= the amount to pay. 
@@ -45,5 +54,6 @@ async function payJobByJobId(jobId) {
 }
 
 module.exports = {
+    getUnpaidJobsByProfile,
     payJobByJobId
 };

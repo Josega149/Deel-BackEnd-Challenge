@@ -15,6 +15,15 @@ async function payJobByJobId(req, res) {
     return res.status(200).end();
 }
 
+async function getUnpaidJobs(req, res) {
+    const { profile } = req;
+
+    const unpaidJobs = await jobService.getUnpaidJobsByProfile(profile);
+
+    return res.status(200).json(unpaidJobs);
+}
+
 module.exports = {
-    payJobByJobId
+    payJobByJobId,
+    getUnpaidJobs
 };
