@@ -124,3 +124,23 @@ When you have finished the assignment, create a github repository and send us th
   
 
 Thank you and good luck! 🙏
+
+## Developer Notes:
+
+A profile cannot be Client and Contractor at the same time.
+
+1. The Node version used was 16.14.2. LTS: Gallium. Sequelize Version: 6.17.0.
+
+2. TODO: Install ESLint: `npm install eslint --save-dev`. npm init @eslint/config
+
+3. Install express-async-handler.
+
+# Concurrency tests:
+
+By default, sequelize uses the isolation level of the database.
+SQLite uses Serializable.
+
+jobService.payJobByJobId(job_id);
+jobService.payJobByJobId(job_id);
+
+
