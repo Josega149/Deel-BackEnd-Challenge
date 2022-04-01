@@ -1,14 +1,14 @@
-
+// eslint-disable-next-line consistent-return
 const getProfile = async (req, res, next) => {
-    const { Profile } = req.app.get('models');
-    const profile = await Profile.findOne({ where: { id: req.get('profile_id') || 0 }});
+  const { Profile } = req.app.get('models');
+  const profile = await Profile.findOne({ where: { id: req.get('profile_id') || 0 } });
 
-    if(!profile) return res.status(401).end();
+  if (!profile) return res.status(401).end();
 
-    req.profile = profile;
+  req.profile = profile;
 
-    next();
-}
+  next();
+};
 module.exports = {
-    getProfile
-}
+  getProfile
+};

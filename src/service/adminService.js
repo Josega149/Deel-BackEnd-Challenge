@@ -1,77 +1,78 @@
 const jobRepository = require('../repository/jobRepository');
 
 async function getBestProfession(start, end) {
-    const professionHashMap = {};
+  const professionHashMap = {};
 
-    const allJobsBetweenDates = await jobRepository.getAllJobsWithContractors(start, end);
+  const allJobsBetweenDates = await jobRepository.getAllJobsWithContractors(start, end);
 
-    for (let i = 0; i < allJobsBetweenDates.length; i += 1) {
-        const currentJob = allJobsBetweenDates[i];
+  for (let i = 0; i < allJobsBetweenDates.length; i += 1) {
+    const currentJob = allJobsBetweenDates[i];
 
-        const professionName = currentJob.dataValues.Contract.dataValues.Contractor.dataValues.profession;
+    const professionName = currentJob.dataValues.Contract.dataValues.Contractor.dataValues.profession;
 
-        if (!professionHashMap[professionName]) {
-            professionHashMap[professionName] = 0;
-        }
-
-        professionHashMap[professionName] += currentJob.dataValues.price;
+    if (!professionHashMap[professionName]) {
+      professionHashMap[professionName] = 0;
     }
 
-    const professions = Object.keys(professionHashMap);
+    professionHashMap[professionName] += currentJob.dataValues.price;
+  }
 
-    let bestProfession = "";
-    let amountEarnedByBestProfession = 0;
-    for (let i = 0; i < professions.length; i += 1) {
-        const profession = professions[i];
-        if (professionHashMap[profession] > amountEarnedByBestProfession) {
-            bestProfession = profession;
-            amountEarnedByBestProfession = professionHashMap[profession];
-        }
+  const professions = Object.keys(professionHashMap);
+
+  let bestProfession = '';
+  let amountEarnedByBestProfession = 0;
+  for (let i = 0; i < professions.length; i += 1) {
+    const profession = professions[i];
+    if (professionHashMap[profession] > amountEarnedByBestProfession) {
+      bestProfession = profession;
+      amountEarnedByBestProfession = professionHashMap[profession];
     }
+  }
 
-    return bestProfession;
+  return bestProfession;
 }
 
 async function getBestClients(start, end, limit = 2) {
-    const clientsHashMap = {};
+  const clientsHashMap = {};
 
-    const allJobsBetweenDates = await jobRepository.getAllJobsWithClients(start, end);
+  const allJobsBetweenDates = await jobRepository.getAllJobsWithClients(start, end);
 
-    for (let i = 0; i < allJobsBetweenDates.length; i += 1) {
-        const currentJob = allJobsBetweenDates[i];
+  for (let i = 0; i < allJobsBetweenDates.length; i += 1) {
+    const currentJob = allJobsBetweenDates[i];
 
-        const clientFirstName = currentJob.dataValues.Contract.dataValues.Client.dataValues.firstName;
-        const clientLastName = currentJob.dataValues.Contract.dataValues.Client.dataValues.lastName;
+    const clientFirstName = currentJob.dataValues.Contract.dataValues.Client.dataValues.firstName;
+    const clientLastName = currentJob.dataValues.Contract.dataValues.Client.dataValues.lastName;
 
-        const clientName = clientFirstName + clientLastName;
+    const clientName = clientFirstName + clientLastName;
 
-        if (!clientsHashMap[clientName]) {
-            clientsHashMap[clientName] = 0;
-        }
-
-        clientsHashMap[clientName] += currentJob.dataValues.price;
+    if (!clientsHashMap[clientName]) {
+      clientsHashMap[clientName] = 0;
     }
 
-    var array = [];
-    for (var key in clientsHashMap) {
-        array.push({ name: key, value: clientsHashMap[key] });
-    }
+    clientsHashMap[clientName] += currentJob.dataValues.price;
+  }
 
-    var sortedClients = array.sort(function(a, b) {
-        return (a.value > b.value) ? -1 : ((b.value > a.value) ? 1 : 0)
-    });
+  const clients = Object.keys(clientsHashMap);
+  const array = [];
+  for (let i = 0; i < clients.length; i += 1) {
+    const key = clients[i];
+    array.push({ name: key, value: clientsHashMap[key] });
+  }
 
-    const bestClients = [];
+  // eslint-disable-next-line no-nested-ternary
+  const sortedClients = array.sort((a, b) => ((a.value > b.value) ? -1 : ((b.value > a.value) ? 1 : 0)));
 
-    for (let i = 0; i < sortedClients.length && i < limit; i += 1) {
-        const sortedClient = sortedClients[i];
-        bestClients.push(sortedClient.name);
-    }
+  const bestClients = [];
 
-    return bestClients;
+  for (let i = 0; i < sortedClients.length && i < limit; i += 1) {
+    const sortedClient = sortedClients[i];
+    bestClients.push(sortedClient.name);
+  }
+
+  return bestClients;
 }
 
 module.exports = {
-    getBestProfession,
-    getBestClients
+  getBestProfession,
+  getBestClients
 };

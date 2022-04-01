@@ -1,31 +1,31 @@
 const contractRepository = require('../repository/contractRepository');
 
 async function getContractById(contractId, profile) {
-    const contract = await contractRepository.getContractById(contractId);
+  const contract = await contractRepository.getContractById(contractId);
 
-    if (!contract) {
-        return undefined;
-    }
+  if (!contract) {
+    return undefined;
+  }
 
-    const { id } = profile;
-    const { ContractorId, ClientId } = contract;
+  const { id } = profile;
+  const { ContractorId, ClientId } = contract;
 
-    if (id !== ContractorId && id !== ClientId) {
-        throw new Error(`Profile with id ${id} is unauthorized to read contract with id ${contractId}.`);
-    }
+  if (id !== ContractorId && id !== ClientId) {
+    throw new Error(`Profile with id ${id} is unauthorized to read contract with id ${contractId}.`);
+  }
 
-    return contract;
+  return contract;
 }
 
 async function getContractsByProfile(profile) {
-    const { id } = profile;
+  const { id } = profile;
 
-    const contracts = await contractRepository.getContractsByProfileId(id);
+  const contracts = await contractRepository.getContractsByProfileId(id);
 
-    return contracts;
+  return contracts;
 }
 
 module.exports = {
-    getContractById,
-    getContractsByProfile
+  getContractById,
+  getContractsByProfile
 };

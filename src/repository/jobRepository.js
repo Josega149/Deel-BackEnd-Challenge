@@ -4,113 +4,116 @@ const { Contract } = require('../model');
 const { Profile } = require('../model');
 
 async function getUnpaidJobsByProfileId(profileId, transaction) {
-    const jobs = await Job.findAll({ 
-        where: { 
-             [Op.and]: [
-                 {
-                    '$Contract.status$':  {
-                         [Op.not]: 'terminated'
-                     }
-                 },
-                 {
-                     [Op.or]: [
-                         { '$Contract.ClientId$': profileId }, 
-                         { '$Contract.ContractorId$' : profileId }
-                     ], 
-                 }
-             ]
-        }, include:[{ 
-            model: Contract,
-            required: true,
-        }],
-        transaction
-    });
+  const jobs = await Job.findAll({
+    where: {
+      [Op.and]: [
+        {
+          '$Contract.status$': {
+            [Op.not]: 'terminated'
+          }
+        },
+        {
+          [Op.or]: [
+            { '$Contract.ClientId$': profileId },
+            { '$Contract.ContractorId$': profileId }
+          ]
+        }
+      ]
+    },
+    include: [{
+      model: Contract,
+      required: true
+    }],
+    transaction
+  });
 
-    return jobs;
+  return jobs;
 }
 
 async function getJobById(jobId, transaction) {
-    const job = await Job.findOne({ where: { id: jobId }, transaction });
+  const job = await Job.findOne({ where: { id: jobId }, transaction });
 
-    return job;
+  return job;
 }
 
 async function upsertJob(jobToUpdate, transaction) {
-    return jobToUpdate.save({ transaction });
+  return jobToUpdate.save({ transaction });
 }
 
 async function getAllJobsWithContractors(start, end) {
-    const jobs = await Job.findAll({ 
-        where: { 
-            [Op.and]: [
-                {
-                    createdAt: {
-                        [Op.gte]: start,  
-                    }
-                },
-                {
-                    createdAt: {
-                        [Op.lt]: end,  
-                    }
-                },
-                {
-                    paid: {
-                        [Op.is]: true,  
-                    }
-                }
-            ]
-        }, include:[{ 
-            model: Contract,
-            required: true,
-            include:[{ 
-                model: Profile,
-                required: true,
-                as: 'Contractor'
-            }]
-        }]
-    });
+  const jobs = await Job.findAll({
+    where: {
+      [Op.and]: [
+        {
+          createdAt: {
+            [Op.gte]: start
+          }
+        },
+        {
+          createdAt: {
+            [Op.lt]: end
+          }
+        },
+        {
+          paid: {
+            [Op.is]: true
+          }
+        }
+      ]
+    },
+    include: [{
+      model: Contract,
+      required: true,
+      include: [{
+        model: Profile,
+        required: true,
+        as: 'Contractor'
+      }]
+    }]
+  });
 
-    return jobs;
+  return jobs;
 }
 
 async function getAllJobsWithClients(start, end) {
-    const jobs = await Job.findAll({ 
-        where: { 
-            [Op.and]: [
-                {
-                    createdAt: {
-                        [Op.gte]: start,  
-                    }
-                },
-                {
-                    createdAt: {
-                        [Op.lt]: end,  
-                    }
-                },
-                {
-                    paid: {
-                        [Op.is]: true,  
-                    }
-                }
-            ]
-        }, include:[{ 
-            model: Contract,
-            required: true,
-            include:[{ 
-                model: Profile,
-                required: true,
-                as: 'Client'
-            }]
-        }]
-    });
+  const jobs = await Job.findAll({
+    where: {
+      [Op.and]: [
+        {
+          createdAt: {
+            [Op.gte]: start
+          }
+        },
+        {
+          createdAt: {
+            [Op.lt]: end
+          }
+        },
+        {
+          paid: {
+            [Op.is]: true
+          }
+        }
+      ]
+    },
+    include: [{
+      model: Contract,
+      required: true,
+      include: [{
+        model: Profile,
+        required: true,
+        as: 'Client'
+      }]
+    }]
+  });
 
-    return jobs;
+  return jobs;
 }
 
 module.exports = {
-    getUnpaidJobsByProfileId,
-    getJobById,
-    upsertJob,
-    getAllJobsWithContractors,
-    getAllJobsWithClients
+  getUnpaidJobsByProfileId,
+  getJobById,
+  upsertJob,
+  getAllJobsWithContractors,
+  getAllJobsWithClients
 };
