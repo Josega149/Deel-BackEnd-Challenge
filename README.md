@@ -125,26 +125,42 @@ When you have finished the assignment, create a github repository and send us th
 
 Thank you and good luck! 🙏
 
-## Developer Notes:
-
-A profile cannot be Client and Contractor at the same time.
+# Developer Notes:
 
 1. The Node version used was 16.14.2. LTS: Gallium. Sequelize Version: 6.17.0.
 
-2. TODO: Install ESLint: `npm install eslint --save-dev`. npm init @eslint/config
+2. ESLint was installed for organization and readability.
 
-3. Install express-async-handler.
+3. `express-async-handler` was installed to handle routes better.
 
-# Concurrency tests:
+### Project structure:
 
-By default, sequelize uses the isolation level of the database.
-SQLite uses Serializable.
+1. Application → Controllers. Their responsibility is to receive and parse the data in the incoming request. If all data is correct, it call the respective service to handle the request.
 
-jobService.payJobByJobId(job_id);
-jobService.payJobByJobId(job_id);
+2. Service → Services. Their responsibility is to handle the business logic. From here you can call the repositories, but the logic is placed inside each service.
 
-TODO: Validate inputs
-
-TODO: Profile middleware should call profileRepository
+3. Repository → Their responsibility is to connect and query the DB.
 
 
+## Next steps and TODOs:
+
+1. Centralized error handling for the controllers.
+
+2. Inputs validation.
+
+3. getProfile should call profileRepository.
+
+4. Authorization middleware for admin endpoints.
+
+5. Unit testing.
+
+6. Swagger.
+
+## Concurrency notes:
+
+By default, `sequelize` uses the isolation level of the database. SQLite uses Serializable.
+
+This means that if two different requests try to perform `payJob` at the same time (even though the clients nor the contractors are the same), one of the transactions will lock the tables and only one of the requests will succeed. 
+
+In order to increment the concurrency level and be able to pay many jobs at the same time (if their clients and contractors are not equal) I would implement an Optimistic Locking approach, with a `version` column at the `Profile` and `Job` tables.
+This way, the isolation level would be at a row level and each row would be protected, without locking the entire table.
