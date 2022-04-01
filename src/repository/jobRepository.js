@@ -1,6 +1,7 @@
 const { Op } = require('@sequelize/core');
 const { Job } = require('../model');
 const { Contract } = require('../model');
+const { Profile } = require('../model');
 
 async function getUnpaidJobsByProfileId(profileId, transaction) {
     const jobs = await Job.findAll({ 
@@ -38,8 +39,38 @@ async function upsertJob(jobToUpdate, transaction) {
     return jobToUpdate.save({ transaction });
 }
 
+async function getAllJobsWithContractors(start, end) {
+    const job = await Job.findAll({ 
+        where: { 
+            [Op.and]: [
+                {
+                    createdAt: {
+                        [Op.gte]: start,  
+                    }
+                },
+                {
+                    createdAt: {
+                        [Op.lt]: end,  
+                    }
+                }
+            ]
+        }, include:[{ 
+            model: Contract,
+            required: true,
+            include:[{ 
+                model: Profile,
+                required: true,
+                as: 'Contractor'
+            }]
+        }]
+    });
+
+    return job;
+}
+
 module.exports = {
     getUnpaidJobsByProfileId,
     getJobById,
-    upsertJob
+    upsertJob,
+    getAllJobsWithContractors
 };

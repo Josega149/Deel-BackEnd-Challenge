@@ -6,6 +6,7 @@ const { getProfile } = require('./middleware/getProfile');
 const contractController = require('./controller/contractController');
 const jobsController = require('./controller/jobsController');
 const profileController = require('./controller/profileController');
+const adminController = require('./controller/adminController');
 
 const routes = express.Router();
 
@@ -17,7 +18,7 @@ routes.get('/jobs/unpaid', getProfile, asyncHandler(jobsController.getUnpaidJobs
 routes.post('/jobs/:job_id/pay', asyncHandler(jobsController.payJobByJobId));
 routes.post('/balances/deposit/:userId', asyncHandler(profileController.depositBalanceToClient));
 
-routes.get('/admin/best-profession?start=<date>&end=<date>', asyncHandler(contractController.getContractById));
-routes.get('/admin/best-clients?start=<date>&end=<date>&limit=<integer>', asyncHandler(contractController.getContractById));
+routes.get('/admin/best-profession', asyncHandler(adminController.getBestProfession));
+routes.get('/admin/best-clients', asyncHandler(adminController.getBestClients));
 
 module.exports = routes;
