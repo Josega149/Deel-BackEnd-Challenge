@@ -52,6 +52,11 @@ async function getAllJobsWithContractors(start, end) {
                     createdAt: {
                         [Op.lt]: end,  
                     }
+                },
+                {
+                    paid: {
+                        [Op.is]: true,  
+                    }
                 }
             ]
         }, include:[{ 
