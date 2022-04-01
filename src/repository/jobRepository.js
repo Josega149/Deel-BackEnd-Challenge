@@ -40,7 +40,7 @@ async function upsertJob(jobToUpdate, transaction) {
 }
 
 async function getAllJobsWithContractors(start, end) {
-    const job = await Job.findAll({ 
+    const jobs = await Job.findAll({ 
         where: { 
             [Op.and]: [
                 {
@@ -70,12 +70,47 @@ async function getAllJobsWithContractors(start, end) {
         }]
     });
 
-    return job;
+    return jobs;
+}
+
+async function getAllJobsWithClients(start, end) {
+    const jobs = await Job.findAll({ 
+        where: { 
+            [Op.and]: [
+                {
+                    createdAt: {
+                        [Op.gte]: start,  
+                    }
+                },
+                {
+                    createdAt: {
+                        [Op.lt]: end,  
+                    }
+                },
+                {
+                    paid: {
+                        [Op.is]: true,  
+                    }
+                }
+            ]
+        }, include:[{ 
+            model: Contract,
+            required: true,
+            include:[{ 
+                model: Profile,
+                required: true,
+                as: 'Client'
+            }]
+        }]
+    });
+
+    return jobs;
 }
 
 module.exports = {
     getUnpaidJobsByProfileId,
     getJobById,
     upsertJob,
-    getAllJobsWithContractors
+    getAllJobsWithContractors,
+    getAllJobsWithClients
 };

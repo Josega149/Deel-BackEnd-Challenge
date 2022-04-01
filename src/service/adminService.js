@@ -32,12 +32,43 @@ async function getBestProfession(start, end) {
     return bestProfession;
 }
 
-async function getBestClients(start, end, limit) {
-    const { id } = profile;
+async function getBestClients(start, end, limit = 2) {
+    const clientsHashMap = {};
 
-    const contracts = await contractRepository.getContractsByProfileId(id);
+    const allJobsBetweenDates = await jobRepository.getAllJobsWithClients(start, end);
 
-    return contracts;
+    for (let i = 0; i < allJobsBetweenDates.length; i += 1) {
+        const currentJob = allJobsBetweenDates[i];
+
+        const clientFirstName = currentJob.dataValues.Contract.dataValues.Client.dataValues.firstName;
+        const clientLastName = currentJob.dataValues.Contract.dataValues.Client.dataValues.lastName;
+
+        const clientName = clientFirstName + clientLastName;
+
+        if (!clientsHashMap[clientName]) {
+            clientsHashMap[clientName] = 0;
+        }
+
+        clientsHashMap[clientName] += currentJob.dataValues.price;
+    }
+
+    var array = [];
+    for (var key in clientsHashMap) {
+        array.push({ name: key, value: clientsHashMap[key] });
+    }
+
+    var sortedClients = array.sort(function(a, b) {
+        return (a.value > b.value) ? -1 : ((b.value > a.value) ? 1 : 0)
+    });
+
+    const bestClients = [];
+
+    for (let i = 0; i < sortedClients.length && i < limit; i += 1) {
+        const sortedClient = sortedClients[i];
+        bestClients.push(sortedClient.name);
+    }
+
+    return bestClients;
 }
 
 module.exports = {
