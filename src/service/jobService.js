@@ -17,9 +17,13 @@ async function getUnpaidJobsByProfile(profile) {
     A client can only pay if his balance >= the amount to pay.
     The amount should be moved from the client’s balance to the contractor balance.
 */
-async function payJobByJobId(jobId) {
+async function payJobByJobId(jobId, profile) {
   return sequelize.transaction(async (transaction) => {
     const job = await jobRepository.getJobById(jobId, transaction);
+
+    if (!job) {
+      throw new Error(`Job with id: ${jobId} does not exist.`);
+    }
 
     const { ContractId, price, paid } = job.dataValues;
 
@@ -30,6 +34,10 @@ async function payJobByJobId(jobId) {
     const contract = await contractRepository.getContractById(ContractId, transaction);
     const { ContractorId, ClientId } = contract.dataValues;
 
+    if (ClientId !== profile.id) {
+      throw new Error(`Profile with id: ${profile.id} is not the client for the job: ${jobId}.`);
+    }
+
     const client = await profileRepository.getProfileById(ClientId, transaction);
     const clientBalance = client.dataValues.balance;
 
@@ -39,11 +47,11 @@ async function payJobByJobId(jobId) {
 
     const contractor = await profileRepository.getProfileById(ContractorId, transaction);
 
-    const newContractorBalance = contractor.dataValues.balance + price;
-    const newClientBalance = clientBalance - price;
+    contractor.balance += price;
+    client.balance -= price;
 
-    await profileRepository.updateProfileBalanceByProfileId(ContractorId, newContractorBalance, transaction);
-    await profileRepository.updateProfileBalanceByProfileId(ClientId, newClientBalance, transaction);
+    await profileRepository.upsertProfile(contractor, transaction);
+    await profileRepository.upsertProfile(client, transaction);
 
     job.paid = true;
     job.paymentDate = new Date();

@@ -15,6 +15,7 @@ async function depositBalanceToClient(clientId, amount) {
       throw new Error(`User with id (${clientId}) is not "client" type.`);
     }
 
+    // const totalDueAmountAtJobsToPay = await jobRepository.getSumOfJobsToPay(clientId, transaction);
     const jobs = await jobRepository.getUnpaidJobsByProfileId(clientId, transaction);
 
     let totalDueAmountAtJobsToPay = 0;

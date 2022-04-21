@@ -8,6 +8,9 @@ async function getUnpaidJobsByProfileId(profileId, transaction) {
     where: {
       [Op.and]: [
         {
+          paid: { [Op.not]: true }
+        },
+        {
           '$Contract.status$': {
             [Op.not]: 'terminated'
           }
@@ -110,7 +113,23 @@ async function getAllJobsWithClients(start, end) {
   return jobs;
 }
 
+async function getSumOfJobsToPay(clientId, transaction) {
+  return Job.sum(
+    'price',
+    {
+      where: { paid: { [Op.not]: true } },
+      include: {
+        model: Contract,
+        where: { ClientId: clientId },
+        required: true
+      },
+      transaction
+    }
+  );
+}
+
 module.exports = {
+  getSumOfJobsToPay,
   getUnpaidJobsByProfileId,
   getJobById,
   upsertJob,

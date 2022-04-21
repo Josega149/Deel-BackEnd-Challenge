@@ -1,11 +1,12 @@
 const jobService = require('../service/jobService');
 
 async function payJobByJobId(req, res) {
+  const { profile } = req;
   const { jobId } = req.params;
 
   // TODO: Centralize error handling
   try {
-    await jobService.payJobByJobId(jobId);
+    await jobService.payJobByJobId(jobId, profile);
   }
   catch (e) {
     // Prevent sending sensitive info to users.

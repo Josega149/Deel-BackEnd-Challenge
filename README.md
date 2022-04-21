@@ -128,10 +128,15 @@ Thank you and good luck! 🙏
 # Developer Notes:
 
 1. The Node version used was 16.14.2. LTS: Gallium. Sequelize Version: 6.17.0.
+   TODO: Add library check-node into package.json to avoid inconsistencies between node versions in the developers PCs.
+         npm v8.5.0
 
 2. ESLint was installed for organization and readability.
+   eslintConfig is in the package.json but could be placed as a file in the root directory as best practice.
 
 3. `express-async-handler` was installed to handle routes better.
+
+4. JEST. For Unit Testing.
 
 ### Project structure:
 
@@ -155,6 +160,8 @@ Thank you and good luck! 🙏
 5. Unit testing.
 
 6. Swagger.
+
+7. Replace all console.logs with logger.
 
 ## Concurrency notes:
 

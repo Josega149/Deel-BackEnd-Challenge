@@ -11,6 +11,7 @@
     "sqlite3": "^4.0.1"
   },
   "scripts": {
+    "test": "jest --forceExit --coverage --verbose --detectOpenHandles",
     "start": "nodemon ./src/server.js",
     "seed": "node ./scripts/seedDb.js"
   },
@@ -19,6 +20,7 @@
     "eslint": "^8.12.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
+    "jest": "^27.5.1",
     "nodemon": "1.19.1"
   },
   "engines": {
@@ -28,28 +30,34 @@
   "eslintConfig": {
     "extends": "airbnb-base",
     "env": {
-        "es6": true,
-        "browser": true
+      "es6": true,
+      "browser": true,
+      "jest": true
     },
     "rules": {
-        "max-len": ["error", { "code": 120 }],
-        "brace-style": [
-            "error",
-            "stroustrup"
-        ],
-        "comma-dangle": [
-            "error",
-            "never"
-        ],
-        "no-unused-vars": [
-            "warn"
-        ],
-        "no-var": [
-            "off"
-        ],
-        "one-var": [
-            "off"
-        ]
+      "max-len": [
+        "error",
+        {
+          "code": 120
+        }
+      ],
+      "brace-style": [
+        "error",
+        "stroustrup"
+      ],
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "no-unused-vars": [
+        "warn"
+      ],
+      "no-var": [
+        "off"
+      ],
+      "one-var": [
+        "off"
+      ]
     }
   }
 }

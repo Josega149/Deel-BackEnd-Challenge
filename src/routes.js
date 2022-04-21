@@ -14,7 +14,7 @@ routes.get('/contracts', getProfile, asyncHandler(contractController.getContract
 routes.get('/contracts/:id', getProfile, asyncHandler(contractController.getContractById));
 routes.get('/jobs/unpaid', getProfile, asyncHandler(jobsController.getUnpaidJobs));
 
-routes.post('/jobs/:jobId/pay', asyncHandler(jobsController.payJobByJobId));
+routes.post('/jobs/:jobId/pay', getProfile, asyncHandler(jobsController.payJobByJobId));
 routes.post('/balances/deposit/:userId', asyncHandler(profileController.depositBalanceToClient));
 
 routes.get('/admin/best-profession', asyncHandler(adminController.getBestProfession));

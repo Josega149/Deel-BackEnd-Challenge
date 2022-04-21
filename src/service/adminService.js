@@ -1,4 +1,5 @@
 const jobRepository = require('../repository/jobRepository');
+const profileRepository = require('../repository/profileRepository');
 
 async function getBestProfession(start, end) {
   const professionHashMap = {};
@@ -72,7 +73,21 @@ async function getBestClients(start, end, limit = 2) {
   return bestClients;
 }
 
+async function getBestProfessionsByQuery(start, end) {
+  const professionsOrderedByTotalEarned = await profileRepository.getBestProfessions(start, end);
+
+  return professionsOrderedByTotalEarned;
+}
+
+async function getBestClientsByQuery(start, end, limit) {
+  const bestClients = await profileRepository.getBestClients(start, end, limit);
+
+  return bestClients;
+}
+
 module.exports = {
+  getBestProfessionsByQuery,
+  getBestClientsByQuery,
   getBestProfession,
   getBestClients
 };
